@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+
 const MainPage = () => {
   const [location, setLocation] = useState(null);
   const [weather, setWeather] = useState([]);
@@ -31,7 +32,7 @@ const MainPage = () => {
     if (location != null) {
       axios
         .get(
-          `http://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=d1580a5eaffdf2ae907ca97ceaff0235`
+          `http://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=${process.env.REACT_APP_OpenWeather_Key}`
         )
         .then((data) => {
            console.log( data?.data.list); 
