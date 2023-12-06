@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import axios from "axios";
 
+export const LocationContext = createContext(null);
+export const WeatherContext = createContext(null);
+export const LoadingContext = createContext(true);
 
-const MainPage = () => {
+export default function Location_Weather_Context(props) {
   const [location, setLocation] = useState(null);
   const [weather, setWeather] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,35 +38,30 @@ const MainPage = () => {
           `http://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=${process.env.REACT_APP_OpenWeather_Key}`
         )
         .then((data) => {
-           console.log( data?.data.list); 
-          setWeather( data?.data.list);
+          console.log(data?.data.list);
+          setWeather(data?.data.list);
         })
         .catch((error) => {
-            console.error("Error fetching data: ", error)
-        })
-    }
-    if(location != null){
-        setIsLoading(false);
+          console.error("Error fetching data: ", error);
+        });
     }
   }, [location]);
-//   useEffect(() => {
-//     if(){
-//         setIsLoading(false);
-//     }
-//   },[weather])
+  useEffect(() => {
+    if (weather != null) {
+      if(location !=null){
+        setIsLoading(false);
+      }
+      
+    }
+  }, [weather]);
 
-  return !isLoading ? (
-    <div>
-        <div>
-          <p>Latitude: {location.latitude}</p>
-          <p>Longitude: {location.longitude}</p>
-          
-        </div>
-    </div>
-  ) : (
-    <h1>Loading!!!!</h1>
-  )
-  ;
-};
-
-export default MainPage;
+  return (
+    <LocationContext.Provider value={{location, setLocation}}>
+      <WeatherContext.Provider value={{weather,setWeather}}>
+        <LoadingContext.Provider value ={isLoading}>
+          {props.children}
+          </LoadingContext.Provider>
+      </WeatherContext.Provider>
+    </LocationContext.Provider>
+  );
+}
