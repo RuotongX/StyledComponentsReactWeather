@@ -1,17 +1,14 @@
 import React, { useContext } from "react";
-
-import {LocationContext, WeatherContext, LoadingContext} from "../api/location_weather_get.jsx";
+import Weather from "./weather_component.jsx";
+import {LoadingWeatherContext} from "../api/location_weather_get.jsx";
 
 export default function MainPage (props) {
-  const {location,setLocation} = useContext(LocationContext);
-  const isLoading = useContext(LoadingContext);
+  
+  const isLoading = useContext(LoadingWeatherContext);
+  
   return !isLoading ? (
     <div>
-        <div>
-          <p>Latitude: {location.latitude}</p>
-          <p>Longitude: {location.longitude}</p>
-          
-        </div>
+        <Weather></Weather>
     </div>
   ) : (
     <h1>Loading!!!!</h1>
